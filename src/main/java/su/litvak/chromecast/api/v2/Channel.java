@@ -508,6 +508,12 @@ class Channel implements Closeable {
         return status == null || status.statuses.length == 0 ? null : status.statuses[0];
     }
 
+    public MediaStatus queueUpdate(String destinationId, String sessionId, long mediaSessionId, int jump) throws IOException {
+        startSession(destinationId);
+        StandardResponse.MediaStatus status = sendStandard("urn:x-cast:com.google.cast.media", StandardRequest.queueUpdate(sessionId, mediaSessionId, jump), destinationId);
+        return status == null || status.statuses.length == 0 ? null : status.statuses[0];
+    }
+
     public MediaStatus seek(String destinationId, String sessionId, long mediaSessionId, double currentTime) throws IOException {
         startSession(destinationId);
         StandardResponse.MediaStatus status = sendStandard("urn:x-cast:com.google.cast.media", StandardRequest.seek(sessionId, mediaSessionId, currentTime), destinationId);

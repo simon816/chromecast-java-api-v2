@@ -386,6 +386,27 @@ public class ChromeCast {
     }
 
     /**
+     * <p>Jump to a relative position in a media queue</p>
+     *
+     * <p>If no application is running at the moment then exception is thrown.</p>
+     *
+     * @param jump amount to move by in the queue. e.g. -1 for previous item, 1 for next item.
+     * @throws IOException
+     */
+    public final void queueUpdate(int jump) throws IOException {
+        Status status = getStatus();
+        Application runningApp = status.getRunningApp();
+        if (runningApp == null) {
+            throw new ChromeCastException("No application is running in ChromeCast");
+        }
+        MediaStatus mediaStatus = channel().getMediaStatus(getTransportId(runningApp));
+        if (mediaStatus == null) {
+            throw new ChromeCastException("ChromeCast has invalid state to update media queue");
+        }
+        channel().queueUpdate(getTransportId(runningApp), runningApp.sessionId, mediaStatus.mediaSessionId, jump);
+    }
+
+    /**
      * <p>Moves current playback time point to specified value</p>
      *
      * <p>If no application is running at the moment then exception is thrown.</p>

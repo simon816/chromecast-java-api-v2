@@ -139,6 +139,22 @@ abstract class StandardRequest extends StandardMessage implements Request {
     }
 
     /**
+     * Request to perform a relative jump in a media queue.
+     * e.g. -1 to go back 1 item.
+     */
+    static class QueueUpdate extends MediaRequest {
+
+        @JsonProperty
+        final int jump;
+
+        QueueUpdate(long mediaSessionId, String sessionId, int jump) {
+            super(mediaSessionId, sessionId);
+            this.jump = jump;
+        }
+
+    }
+
+    /**
      * Request to change current playback position.
      */
     static class Seek extends MediaRequest {
@@ -190,6 +206,10 @@ abstract class StandardRequest extends StandardMessage implements Request {
 
     static Pause pause(String sessionId, long mediaSessionId) {
         return new Pause(mediaSessionId, sessionId);
+    }
+
+    static QueueUpdate queueUpdate(String sessionId, long mediaSessionId, int jump) {
+        return new QueueUpdate(mediaSessionId, sessionId, jump);
     }
 
     static Seek seek(String sessionId, long mediaSessionId, double currentTime) {
